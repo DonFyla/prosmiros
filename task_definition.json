@@ -1,264 +1,109 @@
 {
-    "family": "",
-    "taskRoleArn": "",
-    "executionRoleArn": "",
+    "family": "my-task-family",
+    "taskRoleArn": "arn:aws:iam::123456789012:role/my-task-role",
+    "executionRoleArn": "arn:aws:iam::123456789012:role/my-execution-role",
     "networkMode": "bridge",
     "containerDefinitions": [
         {
             "name": "fargate-app",
             "image": "public.ecr.aws/docker/library/httpd:latest",
             "repositoryCredentials": {
-                "credentialsParameter": ""
+                "credentialsParameter": "arn:aws:secretsmanager:region:account-id:secret:my-secret"
             },
-            "cpu": 0,
-            "memory": 0,
-            "memoryReservation": 0,
-            "links": [
-                ""
-            ],
+            "cpu": 256,
+            "memory": 512,
+            "memoryReservation": 256,
             "portMappings": [
                 {
-                    "containerPort": 0,
-                    "hostPort": 0,
-                    "protocol": "tcp",
-                    "name": "",
-                    "appProtocol": "http",
-                    "containerPortRange": ""
+                    "containerPort": 80,
+                    "hostPort": 80,
+                    "protocol": "tcp"
                 }
             ],
             "essential": true,
-            "entryPoint": [
-                ""
-            ],
-            "command": [
-                ""
-            ],
             "environment": [
                 {
-                    "name": "",
-                    "value": ""
+                    "name": "ENV_VAR",
+                    "value": "value"
                 }
             ],
             "environmentFiles": [
                 {
-                    "value": "",
+                    "value": "arn:aws:s3:::mybucket/myenvfile",
                     "type": "s3"
                 }
             ],
-            "mountPoints": [
-                {
-                    "sourceVolume": "",
-                    "containerPath": "",
-                    "readOnly": true
-                }
-            ],
-            "volumesFrom": [
-                {
-                    "sourceContainer": "",
-                    "readOnly": true
-                }
-            ],
+            "mountPoints": [],
+            "volumesFrom": [],
             "linuxParameters": {
-                "capabilities": {
-                    "add": [
-                        ""
-                    ],
-                    "drop": [
-                        ""
-                    ]
-                },
-                "devices": [
-                    {
-                        "hostPath": "",
-                        "containerPath": "",
-                        "permissions": [
-                            "read"
-                        ]
-                    }
-                ],
-                "initProcessEnabled": true,
-                "sharedMemorySize": 0,
-                "tmpfs": [
-                    {
-                        "containerPath": "",
-                        "size": 0,
-                        "mountOptions": [
-                            ""
-                        ]
-                    }
-                ],
-                "maxSwap": 0,
-                "swappiness": 0
+                "devices": [],
+                "initProcessEnabled": false,
+                "sharedMemorySize": 128,
+                "tmpfs": []
             },
-            "secrets": [
-                {
-                    "name": "",
-                    "valueFrom": ""
-                }
-            ],
+            "secrets": [],
             "dependsOn": [
                 {
                     "containerName": "fargate-app",
                     "condition": "START"
                 }
             ],
-            "startTimeout": 0,
-            "stopTimeout": 0,
-            "hostname": "",
-            "user": "",
-            "workingDirectory": "",
-            "disableNetworking": true,
-            "privileged": true,
-            "readonlyRootFilesystem": true,
-            "dnsServers": [
-                ""
-            ],
-            "dnsSearchDomains": [
-                ""
-            ],
-            "extraHosts": [
-                {
-                    "hostname": "",
-                    "ipAddress": ""
-                }
-            ],
-            "dockerSecurityOptions": [
-                ""
-            ],
-            "interactive": true,
-            "pseudoTerminal": true,
-            "dockerLabels": {
-                "KeyName": ""
-            },
-            "ulimits": [
-                {
-                    "name": "core",
-                    "softLimit": 0,
-                    "hardLimit": 0
-                }
-            ],
+            "hostname": "my-hostname",
+            "dnsServers": [],
+            "dnsSearchDomains": [],
+            "extraHosts": [],
+            "dockerSecurityOptions": [],
+            "interactive": false,
+            "pseudoTerminal": false,
+            "dockerLabels": {},
+            "ulimits": [],
             "logConfiguration": {
-                "logDriver": "json-file",
+                "logDriver": "awslogs",
                 "options": {
-                    "KeyName": ""
-                },
-                "secretOptions": [
-                    {
-                        "name": "",
-                        "valueFrom": ""
-                    }
-                ]
+                    "awslogs-group": "my-log-group",
+                    "awslogs-region": "my-region",
+                    "awslogs-stream-prefix": "my-app"
+                }
             },
             "healthCheck": {
                 "command": [
-                    ""
+                    "CMD-SHELL",
+                    "curl -f http://localhost/ || exit 1"
                 ],
-                "interval": 0,
-                "timeout": 0,
-                "retries": 0,
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3,
                 "startPeriod": 0
             },
-            "systemControls": [
-                {
-                    "namespace": "",
-                    "value": ""
-                }
-            ],
-            "resourceRequirements": [
-                {
-                    "value": "",
-                    "type": "GPU"
-                }
-            ],
-            "firelensConfiguration": {
-                "type": "fluentd",
-                "options": {
-                    "KeyName": ""
-                }
-            },
-            "credentialSpecs": [
-                ""
-            ]
+            "systemControls": [],
+            "resourceRequirements": [],
+            "firelensConfiguration": {}
         }
     ],
     "volumes": [
         {
-            "name": "",
-            "host": {
-                "sourcePath": ""
-            },
-            "dockerVolumeConfiguration": {
-                "scope": "task",
-                "autoprovision": true,
-                "driver": "",
-                "driverOpts": {
-                    "KeyName": ""
-                },
-                "labels": {
-                    "KeyName": ""
-                }
-            },
+            "name": "my-volume",
             "efsVolumeConfiguration": {
-                "fileSystemId": "",
-                "rootDirectory": "",
-                "transitEncryption": "ENABLED",
-                "transitEncryptionPort": 0,
-                "authorizationConfig": {
-                    "accessPointId": "",
-                    "iam": "ENABLED"
-                }
-            },
-            "fsxWindowsFileServerVolumeConfiguration": {
-                "fileSystemId": "",
-                "rootDirectory": "",
-                "authorizationConfig": {
-                    "credentialsParameter": "",
-                    "domain": ""
-                }
-            },
-            "configuredAtLaunch": true
-        }
-    ],
-    "placementConstraints": [
-        {
-            "type": "memberOf",
-            "expression": ""
-        }
-    ],
-    "requiresCompatibilities": [
-        "EC2"
-    ],
-    "cpu": "",
-    "memory": "",
-    "tags": [
-        {
-            "key": "",
-            "value": ""
-        }
-    ],
-    "pidMode": "host",
-    "ipcMode": "host",
-    "proxyConfiguration": {
-        "type": "APPMESH",
-        "containerName": "",
-        "properties": [
-            {
-                "name": "",
-                "value": ""
+                "fileSystemId": "fs-12345678",
+                "rootDirectory": "/",
+                "transitEncryption": "ENABLED"
             }
-        ]
-    },
-    "inferenceAccelerators": [
-        {
-            "deviceName": "",
-            "deviceType": ""
         }
     ],
+    "placementConstraints": [],
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "tags": [],
+    "pidMode": null,
+    "ipcMode": null,
+    "proxyConfiguration": {},
+    "inferenceAccelerators": [],
     "ephemeralStorage": {
-        "sizeInGiB": 0
+        "sizeInGiB": 21
     },
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
-        "operatingSystemFamily": "WINDOWS_SERVER_2019_FULL"
+        "operatingSystemFamily": "LINUX"
     }
 }
